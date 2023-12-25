@@ -1,7 +1,8 @@
 # Titre du Projet : Mon Application Canvas
 
 ## Description
-Ce projet est une application web utilisant HTML5 Canvas pour créer des dessins interactifs. Elle permet aux utilisateurs de dessiner des formes, de choisir des couleurs et de sauvegarder leur travail.
+Ce projet est une application web utilisant HTML5 Canvas pour créer des dessins interactifs. 
+Elle permet aux utilisateurs de faire des griboullis et de les sauvegarder.
 
 ## Installation
 Pour installer ce projet, clonez le dépôt et ouvrez le fichier `canvas_01.html` dans un navigateur moderne :

@@ -62,9 +62,12 @@ const mouse = {
     y:undefined,
     isPressed: false
 }
-
+                                                                                                         
 canvas.addEventListener('pointerdown', function(event) {
     mouse.isPressed = true;
+    mouse.x = event.clientX;
+    mouse.y = event.clientY;
+    drawShape();
     lastX = event.clientX;
     lastY = event.clientY;
 });
@@ -80,16 +83,15 @@ canvas.addEventListener('pointermove', function(event) {
     mouse.x = event.x;
     mouse.y = event.y;
 
-        if (lastX !== null && lastY !== null) {
-            drawLine(lastX, lastY, mouse.x, mouse.y);
-        }
-
-        lastX = mouse.x;
-        lastY = mouse.y;
+    if (lastX !== null && lastY !== null) {
+        drawLine(lastX, lastY, mouse.x, mouse.y);
+    }
+    lastX = mouse.x;
+    lastY = mouse.y;
 });
 function drawLine(x1, y1, x2, y2) {
     const distance = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-    const steps = distance * 2; // Ajustez pour plus ou moins de densité
+    const steps = distance / 5; // Ajustez pour plus ou moins de densité
 
     for (let i = 0; i < steps; i++) {
         const x = x1 + (x2 - x1) * i / steps;
@@ -104,6 +106,22 @@ function drawLine(x1, y1, x2, y2) {
             color: colorPicker.value
         });
     }
+}
+
+function drawShape() {
+    if (!mouse.isPressed) return;
+
+    let shapeDetails = {
+        type: shapeSelector.value,
+        x: mouse.x,
+        y: mouse.y,
+        size: parseInt(sizeSlider.value),
+        color: colorPicker.value
+    };
+    shapes.push(shapeDetails); // Ajouter les détails de la forme
+
+    drawShapeWithProperties(shapeDetails);
+
 }
 function drawShapeWithProperties(shape) {
     ctx.fillStyle = shape.color;

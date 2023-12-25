@@ -91,7 +91,7 @@ canvas.addEventListener('pointermove', function(event) {
 });
 function drawLine(x1, y1, x2, y2) {
     const distance = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-    const steps = distance / 5; // Ajustez pour plus ou moins de densité
+    const steps = distance * 2; // Ajustez pour plus ou moins de densité
 
     for (let i = 0; i < steps; i++) {
         const x = x1 + (x2 - x1) * i / steps;

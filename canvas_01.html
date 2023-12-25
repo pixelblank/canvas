@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Canvas</title>
+</head>
+<style>
+    *{
+        padding: 0;
+        margin: 0;
+        text-decoration: none;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+        transition: 0.3s ease-in-out;
+    }
+    body{
+        background-color: #1a1d22;
+        font-size: calc(1vw + 1vh + 1.25vmin);
+        position: relative;
+    }
+    h1 {
+        font-size: 200%;
+        color: #a5b1be;
+        text-transform: uppercase;
+        letter-spacing: calc(0.1vw + 0.1vh * 20);
+    }
+    a{
+        color: #87929f;
+        font-size: 120%;
+    }
+    a:hover{
+        color: #ffffff;
+    }
+    .mainCnt{
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 50px 75px;
+        position: relative;
+    }
+    .background{
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        background-image: url("./img/sigmund-ferm.jpg");
+        background-size: cover;
+        background-blend-mode: multiply;
+        z-index: 0;
+        filter: blur(100px);
+        opacity: 0.25;
+    }
+    @media(max-width: 1400px){
+        h1 {
+            letter-spacing: calc(0.1vw + 0.1vh * 10);
+        }
+    }
+    @media(max-width: 900px){
+        h1 {
+            letter-spacing: calc(0.1vw + 0.1vh);
+        }
+    }
+    nav{
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 9999;
+        height: 100vh;
+        width: 300px; /* Largeur fixe pour le nav */
+        display: flex;
+        flex-direction: column;
+        background-color: rgba(55, 49, 49, 0.25); /* Utilisez rgba pour la transparence */
+        backdrop-filter: blur(30px);
+        -webkit-backdrop-filter: blur(30px); /* Pour la compatibilité avec Safari */
+    }
+    canvas {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 1; /* Assurez-vous que le z-index est inférieur à celui du nav */
+    }
+</style>
+<body>
+<nav>
+    <ul>
+        <li>
+            <label>
+                <input type="radio" name="">
+                <div class="icon-box">
+
+                </div>
+            </label>
+        </li>
+    </ul>
+    <select id="shape-selector">
+        <option value="circle">Cercle</option>
+        <option value="rectangle">Rectangle</option>
+        <option value="eraser">Gomme</option>
+        <!-- Ajoutez d'autres formes ici -->
+    </select>
+
+    <input type="color" id="color-picker" value="#000000">
+
+    <input type="range" id="size-slider" min="1" max="100" value="10">
+
+    <!-- Ajoutez d'autres contrôles ici -->
+    <div class="modal">
+        <input type="text" id="file-name" placeholder="Entrez un nom de fichier">
+        <select id="file-format">
+            <option value="png">PNG</option>
+            <option value="jpeg">JPEG</option>
+        </select>
+        <button id="save-btn">Sauvegarder</button>
+    </div>
+</nav>
+<canvas id="canvas_1"></canvas>
+<div class="mainCnt">
+    <div class="background"></div>
+</div>
+<script src="canvas_JS/canvas_01.js"></script>
+</body>
+</html>

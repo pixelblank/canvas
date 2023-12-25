@@ -1,7 +1,12 @@
+const shapeSelector = document.getElementById('shape-selector');
+const colorPicker = document.getElementById('color-picker');
+const sizeSlider = document.getElementById('size-slider');
+
 const canvas = document.querySelector('#canvas_1');
 const ctx = canvas.getContext('2d');
 
-
+const offscreenCanvas = document.createElement('canvas');
+const offscreenCtx = offscreenCanvas.getContext('2d');
 
 document.getElementById('save-btn').addEventListener('click', function() {
     const imageDataURL = canvas.toDataURL('image/png');
@@ -14,17 +19,8 @@ document.getElementById('save-btn').addEventListener('click', function() {
 canvas.height = window.innerHeight;
 canvas.width = window.innerWidth;
 
-const offscreenCanvas = document.createElement('canvas');
-const offscreenCtx = offscreenCanvas.getContext('2d');
 offscreenCanvas.width = canvas.width;
 offscreenCanvas.height = canvas.height;
-
-
-const shapeSelector = document.getElementById('shape-selector');
-const colorPicker = document.getElementById('color-picker');
-const sizeSlider = document.getElementById('size-slider');
-
-
 
 document.getElementById('save-btn').addEventListener('click', function() {
     const fileName = document.getElementById('file-name').value || 'dessin';
@@ -48,19 +44,19 @@ document.getElementById('shape-selector').addEventListener('change', function(ev
 
 
 let shapes = [];
+let lastX = null;
+let lastY = null;
 
 window.addEventListener('resize', function () {
     canvas.height = window.innerHeight;
     canvas.width = window.innerWidth;
     offscreenCanvas.width = canvas.width;
     offscreenCanvas.height = canvas.height;
-
-    // Effacer le contenu du canvas hors écran avant de redessiner
     offscreenCtx.clearRect(0, 0, offscreenCanvas.width, offscreenCanvas.height);
 
-    // Redessiner toutes les formes stockées
     shapes.forEach(shape => drawShapeWithProperties(shape));
 });
+
 const mouse = {
     x:undefined,
     y:undefined,
@@ -69,37 +65,45 @@ const mouse = {
 
 canvas.addEventListener('pointerdown', function(event) {
     mouse.isPressed = true;
-    if (mouse.isPressed) {
-        drawShape();
-    }
+    lastX = event.clientX;
+    lastY = event.clientY;
 });
 
 canvas.addEventListener('pointerup', function(event) {
     mouse.isPressed = false;
+    lastX = null;
+    lastY = null;
 });
 
 canvas.addEventListener('pointermove', function(event) {
+    if (!mouse.isPressed) return;
     mouse.x = event.x;
     mouse.y = event.y;
-    if (mouse.isPressed) {
-        drawShape();
-    }
+
+        if (lastX !== null && lastY !== null) {
+            drawLine(lastX, lastY, mouse.x, mouse.y);
+        }
+
+        lastX = mouse.x;
+        lastY = mouse.y;
 });
+function drawLine(x1, y1, x2, y2) {
+    const distance = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+    const steps = distance * 2; // Ajustez pour plus ou moins de densité
 
-function drawShape() {
-    if (!mouse.isPressed) return;
+    for (let i = 0; i < steps; i++) {
+        const x = x1 + (x2 - x1) * i / steps;
+        const y = y1 + (y2 - y1) * i / steps;
 
-    let shapeDetails = {
-        type: shapeSelector.value,
-        x: mouse.x,
-        y: mouse.y,
-        size: parseInt(sizeSlider.value),
-        color: colorPicker.value
-    };
-    shapes.push(shapeDetails); // Ajouter les détails de la forme
-
-    drawShapeWithProperties(shapeDetails);
-
+        // Utilisez drawShapeWithProperties pour dessiner la forme
+        drawShapeWithProperties({
+            type: shapeSelector.value,
+            x: x,
+            y: y,
+            size: parseInt(sizeSlider.value),
+            color: colorPicker.value
+        });
+    }
 }
 function drawShapeWithProperties(shape) {
     ctx.fillStyle = shape.color;

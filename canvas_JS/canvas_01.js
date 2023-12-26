@@ -44,9 +44,16 @@ document.getElementById('shape-selector').addEventListener('change', function(ev
 
 
 let shapes = [];
+let drawings = [];
+
 let lastX = null;
 let lastY = null;
 
+const mouse = {
+    x:undefined,
+    y:undefined,
+    isPressed: false
+}
 window.addEventListener('resize', function () {
     canvas.height = window.innerHeight;
     canvas.width = window.innerWidth;
@@ -55,14 +62,9 @@ window.addEventListener('resize', function () {
     offscreenCtx.clearRect(0, 0, offscreenCanvas.width, offscreenCanvas.height);
 
     shapes.forEach(shape => drawShapeWithProperties(shape));
+    ctx.drawImage(offscreenCanvas, 0, 0);
 });
 
-const mouse = {
-    x:undefined,
-    y:undefined,
-    isPressed: false
-}
-                                                                                                         
 canvas.addEventListener('pointerdown', function(event) {
     mouse.isPressed = true;
     mouse.x = event.clientX;
@@ -71,13 +73,11 @@ canvas.addEventListener('pointerdown', function(event) {
     lastX = event.clientX;
     lastY = event.clientY;
 });
-
 canvas.addEventListener('pointerup', function(event) {
     mouse.isPressed = false;
     lastX = null;
     lastY = null;
 });
-
 canvas.addEventListener('pointermove', function(event) {
     if (!mouse.isPressed) return;
     mouse.x = event.x;
@@ -89,6 +89,7 @@ canvas.addEventListener('pointermove', function(event) {
     lastX = mouse.x;
     lastY = mouse.y;
 });
+
 function drawLine(x1, y1, x2, y2) {
     const distance = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
     const steps = distance * 2; // Ajustez pour plus ou moins de densité
@@ -97,7 +98,6 @@ function drawLine(x1, y1, x2, y2) {
         const x = x1 + (x2 - x1) * i / steps;
         const y = y1 + (y2 - y1) * i / steps;
 
-        // Utilisez drawShapeWithProperties pour dessiner la forme
         drawShapeWithProperties({
             type: shapeSelector.value,
             x: x,
@@ -118,7 +118,7 @@ function drawShape() {
         size: parseInt(sizeSlider.value),
         color: colorPicker.value
     };
-    shapes.push(shapeDetails); // Ajouter les détails de la forme
+    shapes.push(shapeDetails);
 
     drawShapeWithProperties(shapeDetails);
 
@@ -126,11 +126,8 @@ function drawShape() {
 function drawShapeWithProperties(shape) {
     ctx.fillStyle = shape.color;
     if (shape.type === 'eraser') {
-        // Logique pour la gomme
-
         let eraserSize = shape.size;
         ctx.clearRect(shape.x - eraserSize / 2, shape.y - eraserSize / 2, eraserSize, eraserSize);
-
     } else if (shape.type === 'circle') {
         ctx.beginPath();
         ctx.arc(shape.x, shape.y, shape.size, 0, Math.PI * 2);
@@ -139,5 +136,4 @@ function drawShapeWithProperties(shape) {
         ctx.fillRect(shape.x - shape.size / 2, shape.y - shape.size / 2, shape.size, shape.size);
     }
     ctx.drawImage(canvas, 0, 0);
-    // Ajoutez d'autres types de formes ici
 }

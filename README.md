@@ -10,7 +10,7 @@ Pour commencer à dessiner, clonez le dépôt et ouvrez le fichier `canvas_01.ht
 git clone https://github.com/pixelblank/canvas.git
 ```
 ## Utilisation
-Ouvrez canvas_01.html dans votre navigateur. Utilisez la barre de navigation pour choisir les formes, les couleurs et la taille. Cliquez et faites glisser sur le canvas pour dessiner.
+Ouvrez `canvas_01.html` dans votre navigateur. Utilisez la barre de navigation pour choisir les formes, les couleurs et la taille. Cliquez et faites glisser sur le canvas pour dessiner.
 
 
 

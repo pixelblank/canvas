@@ -5,7 +5,7 @@ Ce projet est une application web utilisant HTML5 Canvas pour créer des dessins
 Elle permet aux utilisateurs de faire des griboullis et de les sauvegarder.
 
 ## Installation
-Pour installer ce projet, clonez le dépôt et ouvrez le fichier `canvas_01.html` dans un navigateur moderne :
+Pour commencer à dessiner, clonez le dépôt et ouvrez le fichier `canvas_01.html` dans un navigateur :
 ```bash
 git clone https://github.com/pixelblank/canvas.git
 ```

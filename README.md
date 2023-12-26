@@ -1,4 +1,4 @@
-# Titre du Projet : Mon Application Canvas
+# Drawing on Canvas
 
 ## Description
 Ce projet est une application web utilisant HTML5 Canvas pour créer des dessins interactifs. 

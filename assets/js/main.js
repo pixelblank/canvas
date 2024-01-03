@@ -146,7 +146,7 @@ function drawShapeWithProperties(shape) {
         ctx.arc(shape.x, shape.y, shape.size, 0, Math.PI * 2);
         ctx.fill();
     } else if (currentTool == "text"){
-        ctx.fillText()
+
     }
 }
 setupEventListeners();

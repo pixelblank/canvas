@@ -1,0 +1,223 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    transition: 0.3s ease-in-out;
+}
+body{
+    background-color: rgb(9, 8, 8);
+    color: white;
+    overflow: hidden;
+}
+ul,li{
+    list-style: none;
+}
+.layout{
+    display: grid;
+    gap: 4px;
+    grid-template-rows: 40px 40px auto 60px 60px 40px;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+            'header'
+            'sidebar'
+            'property_nav'
+            'main'
+            'footer';
+    min-height: 100vh;
+}
+@media(min-width: 480px){
+    .layout{
+        display: grid;
+        grid-template-rows: 40px auto 80px 40px;
+        grid-template-columns: 40px auto auto 200px;
+        grid-template-areas:
+                'header header header header'
+                'sidebar main main property_nav'
+                'sidebar main main property_nav'
+                'footer footer footer footer';
+    }
+    .layout.open {
+        grid-template-columns: 76px auto auto 200px; /* Ajustez la première colonne pour la nav agrandie */
+    }
+}
+header, main, footer{
+    background-color: rgb(29, 28, 28);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.property_nav{
+    grid-area: property_nav;
+    background-color: rgb(29, 28, 28);
+    z-index: 10;
+}
+header{
+    grid-area: header;
+    justify-content: flex-start;
+    background-color: rgb(29, 28, 28);
+    position: relative;
+    z-index: 10;
+}
+header > .logo_wrp {
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+header > .logo_wrp > img {
+    height: 44%;
+    width: auto;
+}
+main{
+    grid-area: main;
+    background-color: black;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+}
+main > canvas {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+nav{
+    grid-area: sidebar;
+    width: 40px;
+    height: 100%;
+    background-color: rgb(29, 28, 28);
+    position: relative;
+    z-index: 10;
+}
+nav.open{
+    width: 76px;
+}
+nav .nav_door{
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+    font-size: 10px;
+    padding: 5px;
+    background-color: rgb(29, 28, 28);
+    border-bottom: 1px solid black
+}
+nav .nav_door i{
+    transform: rotate(180deg);
+}
+nav.open .nav_door i{
+    transform: rotate(360deg);
+}
+nav > ul{
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 4px;
+}
+nav > ul > li{
+    display: flex;
+    padding: 0 0;
+    cursor: pointer;
+    align-items: center;
+    margin: 5px 0;
+}
+nav > ul > li > input{
+    position: absolute;
+    opacity: 0;
+}
+nav > ul > li > label{
+    display: flex;
+    align-items: center;
+}
+nav > ul > li > label > .icone_title{
+    position: absolute;
+    padding: 0px 5px 3px 5px;
+    background-color: #a7a7a7;
+    color: black;
+    z-index: 20;
+    top: 0;
+    left: 0;
+    display: none;
+}
+nav > ul > li > label > .icone_box{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    margin: 0 4px;
+    color: #6f6f6f;
+    font-size: 16px;
+    box-shadow: inset -1px -1px 3px rgba(255, 255, 255, 0.2),
+    inset 1px 1px 3px rgba(0,0,0,0.9);
+}
+nav > ul > li > label.active > .icone_box{
+    color: #ffffff;
+    box-shadow: inset -1px -1px 2px rgba(255, 255, 255, 0.2),
+                inset 1px 1px 2px rgba(0,0,0,1);
+}
+.widget{
+    grid-area: widget;
+    width: 100%;
+}
+.statistics{
+    grid-area: statistics;
+    width: 100%;
+}
+footer{
+    grid-area: footer;
+    justify-content: flex-end;
+    position: relative;
+    z-index: 10;
+}
+
+footer > .save_wrp {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    min-width: 350px;
+    justify-content: space-around;
+}
+
+footer > .save_wrp > .file-name {
+    height: 80%;
+    background-color: transparent;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 1px solid rgba(255,255,255,0.3);
+    color: white;
+}
+footer > .save_wrp > .file-name::placeholder {
+    color: #6f6f6f;
+}
+footer > .save_wrp > .file-name:focus-visible {
+    outline: none;
+}
+footer > .save_wrp > select{
+    height: 80%;
+    background-color: transparent;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+    color:  #6f6f6f;
+}
+footer > .save_wrp > select > option{
+    height: 80%;
+    background-color: rgb(29, 28, 28);
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+    color:  #6f6f6f;
+}
+footer > .save_wrp > #save-btn{
+    height: 80%;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+    background-color: rgb(56, 56, 242);
+    color: white;
+    padding: 0 10px;
+}

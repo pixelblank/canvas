@@ -1,26 +1,67 @@
-const shapeSelector = document.getElementById('shape-selector');
 const colorPicker = document.getElementById('color-picker');
 const sizeSlider = document.getElementById('size-slider');
 
 const canvas = document.querySelector('#canvas_1');
 const ctx = canvas.getContext('2d');
 
-const offscreenCanvas = document.createElement('canvas');
-const offscreenCtx = offscreenCanvas.getContext('2d');
 
-document.getElementById('save-btn').addEventListener('click', function() {
-    const imageDataURL = canvas.toDataURL('image/png');
-    const link = document.createElement('a');
-    link.href = imageDataURL;
-    link.download  = '';
-    link.click();
-});
+let currentTool = 'brush'; // Définir une variable pour l'outil actuel
 
 canvas.height = window.innerHeight;
 canvas.width = window.innerWidth;
 
-offscreenCanvas.width = canvas.width;
-offscreenCanvas.height = canvas.height;
+document.addEventListener('DOMContentLoaded', function() {
+    const nav = document.querySelector('nav');
+    const nav_door = document.querySelector('.nav_door');
+
+    const layout = document.querySelector('.layout');
+    const radios = document.querySelectorAll('input[type="radio"]');
+    const iconeBoxes = document.querySelectorAll('.icone_box');
+
+    nav_door.addEventListener('click', function() {
+        this.classList.toggle('open');
+        nav.classList.toggle('open');
+        layout.classList.toggle('open');
+    });
+    radios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            if(this.checked) {
+                currentTool = this.value; // Mettre à jour l'outil actif
+                this.nextElementSibling.classList.add('active');
+            }
+            radios.forEach(r => {
+                if(r !== this) r.nextElementSibling.classList.remove('active');
+            });
+        });
+    });
+    window.addEventListener('mouseover', function(event){
+        console.log(event.clientX, event.clientY);
+    })
+    iconeBoxes.forEach(iconeBox => {
+        let hoverTimeout;
+
+        iconeBox.addEventListener('mouseenter', function(event) {
+            clearTimeout(hoverTimeout);
+            hoverTimeout = setTimeout(() => {
+                console.log(event.clientX, event.clientY)
+                const iconeTitle = this.nextElementSibling;
+                if (iconeTitle) {
+                    const boxRect = this.getBoundingClientRect();
+                    iconeTitle.style.display = 'block';
+                    iconeTitle.style.left = `${event.clientX}px`;
+                    iconeTitle.style.top = `${event.clientY}px`;
+                }
+            }, 1000);
+        });
+        iconeBox.addEventListener('mouseleave', function() {
+            clearTimeout(hoverTimeout);
+            const iconeTitle = this.nextElementSibling;
+            if (iconeTitle) {
+                iconeTitle.style.display = 'none';
+            }
+        });
+    });
+});
 
 document.getElementById('save-btn').addEventListener('click', function() {
     const fileName = document.getElementById('file-name').value || 'dessin';
@@ -38,9 +79,7 @@ document.getElementById('save-btn').addEventListener('click', function() {
     link.download = fileName + '.' + format;
     link.click();
 });
-document.getElementById('shape-selector').addEventListener('change', function(event) {
-    isEraser = event.target.value === 'eraser';
-});
+
 
 
 let shapes = [];
@@ -57,12 +96,9 @@ const mouse = {
 window.addEventListener('resize', function () {
     canvas.height = window.innerHeight;
     canvas.width = window.innerWidth;
-    offscreenCanvas.width = canvas.width;
-    offscreenCanvas.height = canvas.height;
-    offscreenCtx.clearRect(0, 0, offscreenCanvas.width, offscreenCanvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     shapes.forEach(shape => drawShapeWithProperties(shape));
-    ctx.drawImage(offscreenCanvas, 0, 0);
 });
 
 canvas.addEventListener('pointerdown', function(event) {
@@ -90,29 +126,40 @@ canvas.addEventListener('pointermove', function(event) {
     lastY = mouse.y;
 });
 
+
+
+
+
+
 function drawLine(x1, y1, x2, y2) {
     const distance = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-    const steps = distance * 2; // Ajustez pour plus ou moins de densité
+    const steps = distance * 2;
 
     for (let i = 0; i < steps; i++) {
         const x = x1 + (x2 - x1) * i / steps;
         const y = y1 + (y2 - y1) * i / steps;
 
-        drawShapeWithProperties({
-            type: shapeSelector.value,
+        const shapeDetails = {
+            type: currentTool,
             x: x,
             y: y,
             size: parseInt(sizeSlider.value),
-            color: colorPicker.value
-        });
+            color: (currentTool === 'brush') ? colorPicker.value : 'transparent'
+        };
+
+        shapes.push(shapeDetails);
+        drawShapeWithProperties(shapeDetails);
     }
 }
+
+
+
 
 function drawShape() {
     if (!mouse.isPressed) return;
 
     let shapeDetails = {
-        type: shapeSelector.value,
+        type: currentTool,
         x: mouse.x,
         y: mouse.y,
         size: parseInt(sizeSlider.value),
@@ -123,17 +170,19 @@ function drawShape() {
     drawShapeWithProperties(shapeDetails);
 
 }
+
+
+
 function drawShapeWithProperties(shape) {
-    ctx.fillStyle = shape.color;
-    if (shape.type === 'eraser') {
-        let eraserSize = shape.size;
-        ctx.clearRect(shape.x - eraserSize / 2, shape.y - eraserSize / 2, eraserSize, eraserSize);
-    } else if (shape.type === 'circle') {
+    if (currentTool === 'eraser') {
+        ctx.fillStyle = 'rgba(255,255,255,0)'; // ou la couleur de fond de votre canevas
         ctx.beginPath();
         ctx.arc(shape.x, shape.y, shape.size, 0, Math.PI * 2);
         ctx.fill();
-    } else if (shape.type === 'rectangle') {
-        ctx.fillRect(shape.x - shape.size / 2, shape.y - shape.size / 2, shape.size, shape.size);
+    } else if (currentTool === 'brush') {
+        ctx.fillStyle = shape.color;
+        ctx.beginPath();
+        ctx.arc(shape.x, shape.y, shape.size, 0, Math.PI * 2);
+        ctx.fill();
     }
-    ctx.drawImage(canvas, 0, 0);
 }

@@ -8,13 +8,13 @@
     <link rel="stylesheet" href="./assets/css/drawing.css">
 </head>
 <body>
-    <div class="layout">
+    <div class="layout open">
         <header>
             <div class="logo_wrp">
                 <img src="./assets/img/artistry-canvas_logo_white.png">
             </div>
         </header>
-        <nav>
+        <nav class="open">
             <span class="nav_door">
                 <i class="fa fa-arrow-left" aria-hidden="true"></i>
             </span>
@@ -27,6 +27,28 @@
                         </span>
                         <span class="icone_title">
                             Pinceau
+                        </span>
+                    </label>
+                </li>
+                <li>
+                    <input type="radio" id="text" name="tool" value="text"/>
+                    <label for="text">
+                        <span class="icone_box">
+                            <i class="fa fa-text-width" aria-hidden="true"></i>
+                        </span>
+                        <span class="icone_title">
+                            Text
+                        </span>
+                    </label>
+                </li>
+                <li>
+                    <input type="radio" id="eyedropper" name="tool" value="eyedropper"/>
+                    <label for="eyedropper">
+                        <span class="icone_box">
+                            <i class="fa fa-eyedropper" aria-hidden="true"></i>
+                        </span>
+                        <span class="icone_title">
+                            Pipette
                         </span>
                     </label>
                 </li>
@@ -73,9 +95,37 @@
             <canvas id="canvas_1"></canvas>
         </main>
         <div class="property_nav">
-            <input type="color" id="color-picker" value="#000000">
+            <div id="shared-properties">
+                <input type="color" id="color-picker"  value="#ffffff">
+                <input type="number" id="size-slider" value="10">
+            </div>
 
-            <input type="range" id="size-slider" min="1" max="10" value="10">
+            <!-- Propriétés spécifiques aux outils -->
+            <div id="tool-properties">
+                <div id="brush-properties" class="tool-specific-settings">
+                    <!-- Propriétés spécifiques au pinceau (si nécessaire) -->
+                </div>
+                <div id="text-properties" class="tool-specific-settings" style="display:none;">
+                    <select id="font-selector">
+                        <option value="Arial">Arial</option>
+                        <option value="Poppins">Poppins</option>
+                        <option value="Verdana">Verdana</option>
+                        <option value="Open Sans">Open Sans</option>
+                    </select>
+                    <select id="font-weight">
+                        <option value="900">900</option>
+                        <option value="800">800</option>
+                        <option value="700">700</option>
+                        <option value="600">600</option>
+                        <option value="500">500</option>
+                        <option value="400">400</option>
+                        <option value="300">300</option>
+                        <option value="200">200</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+                <!-- Ajoutez d'autres outils au besoin -->
+            </div>
         </div>
         <footer>
             <div class="save_wrp">

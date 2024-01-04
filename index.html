@@ -87,8 +87,6 @@
                         </span>
                     </label>
                 </li>
-
-
             </ul>
         </nav>
         <main>
@@ -103,9 +101,14 @@
             <!-- Propriétés spécifiques aux outils -->
             <div id="tool-properties">
                 <div id="brush-properties" class="tool-specific-settings">
-                    <!-- Propriétés spécifiques au pinceau (si nécessaire) -->
+                    <select id="brush-shape">
+                        <option value="circle">circle</option>
+                        <option value="rectangle">rectangle</option>
+                    </select>
+                    <input type="range" id="brush-hardness" min="0" max="100" value="50"/>
                 </div>
                 <div id="text-properties" class="tool-specific-settings" style="display:none;">
+                    <input type="text" id="text-value">
                     <select id="font-selector">
                         <option value="Arial">Arial</option>
                         <option value="Poppins">Poppins</option>
@@ -122,6 +125,10 @@
                         <option value="300">300</option>
                         <option value="200">200</option>
                         <option value="100">100</option>
+                    </select>
+                    <select id="fontFS">
+                        <option value="fill">Fill</option>
+                        <option value="stroke">stroke</option>
                     </select>
                 </div>
                 <!-- Ajoutez d'autres outils au besoin -->

@@ -52,7 +52,7 @@ function saveDocument(){
     link.click();
 }
 
-
+/////////////////////*element ajouté pour faire apparraitre les etiquettes des outils/////////////
 document.addEventListener('DOMContentLoaded', function() {
     const radios = document.querySelectorAll('input[type="radio"]');
     const iconeBoxes = document.querySelectorAll('.icone_box');
@@ -171,22 +171,26 @@ function trim(str) {
 }
 function drawLine(x1, y1, x2, y2) {
     const distance = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-    const steps = distance * 2;
 
+    const brushHardness = parseInt(document.getElementById('brush-hardness').value);
+
+    const steps = brushHardness === 100 ? distance : distance / 20 + (distance - distance / 20) * (brushHardness / 100);
     for (let i = 0; i < steps; i++) {
         const x = x1 + (x2 - x1) * i / steps;
         const y = y1 + (y2 - y1) * i / steps;
 
-        const shapeDetails = {
-            type: currentTool,
-            x: x,
-            y: y,
-            size: parseInt(sizeSlider.value),
-            color: (currentTool === 'brush') ? colorPicker.value : 'transparent'
-        };
+        // Créer un dégradé pour chaque forme
+        const gradient = ctx.createRadialGradient(x, y, 0, x, y, parseInt(sizeSlider.value));
 
-        shapes.push(shapeDetails);
-        drawShapeWithProperties(shapeDetails);
+        const hardnessStop = brushHardness / 100;
+        gradient.addColorStop(hardnessStop, colorPicker.value);
+        gradient.addColorStop(1, colorPicker.value + '00');
+
+        // Dessiner la forme avec le dégradé
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(x, y, parseInt(sizeSlider.value), 0, Math.PI * 2);
+        ctx.fill();
     }
 }
 
@@ -216,19 +220,45 @@ function drawShapeWithProperties(shape) {
     // Réinitialiser pour les autres outils
         ctx.globalCompositeOperation = "source-over";
         if (currentTool === 'brush') {
-            ctx.fillStyle = shape.color;
-            ctx.beginPath();
-            ctx.arc(shape.x, shape.y, shape.size, 0, Math.PI * 2);
-            ctx.fill();
+            const brushShape = document.getElementById('brush-shape').value;
+            const brushHardness = document.getElementById('brush-hardness').value;
+            const hardnessStop = brushHardness / 100;
+            console.log("Brush hardness:", brushHardness); // Débogage
+            console.log("Hardness stop:", hardnessStop); // Débogage
+            switch (brushShape) {
+                case 'circle':
+                    const gradient = ctx.createRadialGradient(shape.x, shape.y, 0, shape.x, shape.y, shape.size);
+                    gradient.addColorStop(hardnessStop, shape.color); // Début du dégradé basé sur la dureté
+                    gradient.addColorStop(1, shape.color + '00');
+                    ctx.fillStyle = gradient;
+                    ctx.beginPath();
+                    ctx.arc(shape.x, shape.y, shape.size, 0, Math.PI * 2);
+                    ctx.fill();
+                    break;
+                case 'rectangle':
+                    ctx.fillStyle = shape.color;
+                    ctx.fillRect(shape.x, shape.y, shape.size, shape.size);
+                    break;
+                default:
+                    ctx.fillStyle = shape.color;
+                    ctx.beginPath();
+                    ctx.arc(shape.x, shape.y, shape.size, 0, Math.PI * 2);
+                    ctx.fill();
+                    break;
+            }
         } else if (currentTool === 'text') {
             const selectedFont = document.getElementById('font-selector').value;
             const fontWeight = document.getElementById('font-weight').value;
-            console.log(selectedFont);
-            console.log(fontWeight);
-            ctx.fillStyle = shape.color;
-            console.log(shape.size);
+            const fontFS = document.getElementById('fontFS').value;
+            const textValue = document.getElementById('text-value').value;
             ctx.font = `${fontWeight} ${shape.size}px ${selectedFont}`;
-            ctx.fillText("Hello World", shape.x, shape.y);
+            if (fontFS === "fill") {
+                ctx.fillStyle = shape.color;
+                ctx.fillText(textValue, shape.x, shape.y);
+            } else if (fontFS === 'stroke') {
+                ctx.strokeStyle = shape.color;
+                ctx.strokeText(textValue, shape.x, shape.y);
+            }
         }
         // Ajoutez d'autres cas pour d'autres outils si nécessaire
     }
